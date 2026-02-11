@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: loan-sql-server
+    environment:
+      - ACCEPT_EULA=Y            
+      - MSSQL_SA_PASSWORD=Ammar123!
+    ports:
+      - "1433:1433" # (Host Port : Container Port)
+    volumes:
+      - sqlvolume:/var/opt/mssql
+
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: loan-rabbitmq
+    ports:
+      - "5672:5672"   
+      - "15672:15672" 
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest 
+      - RABBITMQ_DEFAULT_PASS=guest 
+
+  redis:
+    image: redis:alpine
+    container_name: loan-redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  sqlvolume:

@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Loan.API/Loan.API.csproj" />
+  <Project Path="Loan.Contracts/Loan.Contracts.csproj" />
+  <Project Path="Loan.Processor/Loan.Processor.csproj" />
+</Solution>
