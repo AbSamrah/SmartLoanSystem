@@ -1,7 +1,27 @@
 using Loan.Processor;
+using Loan.Processor.Consumers;
+using MassTransit;
 
-var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddHostedService<Worker>();
+IHost host = Host.CreateDefaultBuilder(args)
+    .ConfigureServices(services =>
+    {
+        services.AddMassTransit(x =>
+        {
+            x.AddConsumer<LoanRequestConsumer>();
 
-var host = builder.Build();
-host.Run();
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host("localhost", "/", h =>
+                {
+                    h.Username("guest");
+                    h.Password("guest");
+                });
+
+                cfg.ConfigureEndpoints(context);
+            });
+        });
+    })
+    .Build();
+
+
+await host.RunAsync();
