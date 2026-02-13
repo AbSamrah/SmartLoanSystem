@@ -9,7 +9,7 @@ services:
       - ACCEPT_EULA=Y            
       - MSSQL_SA_PASSWORD=Ammar123!
     ports:
-      - "1433:1433" # (Host Port : Container Port)
+      - "1433:1433"
     volumes:
       - sqlvolume:/var/opt/mssql
 
