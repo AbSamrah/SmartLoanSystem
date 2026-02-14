@@ -24,10 +24,14 @@ builder.Services.AddMassTransit(x =>
 
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("localhost", "/", h =>
+        var rabbitHost = builder.Configuration["RabbitMQ:Host"] ?? "localhost";
+        var rabbitUser = builder.Configuration["RabbitMQ:Username"] ?? throw new InvalidOperationException("RabbitMQ Username missing");
+        var rabbitPass = builder.Configuration["RabbitMQ:Password"] ?? throw new InvalidOperationException("RabbitMQ Password missing");
+
+        cfg.Host(rabbitHost, "/", h =>
         {
-            h.Username("guest");
-            h.Password("guest");
+            h.Username(rabbitUser);
+            h.Password(rabbitPass);
         });
 
         cfg.ConfigureEndpoints(context);
@@ -56,7 +60,7 @@ builder.Services.AddElsa(elsa =>
 
         identity.TokenOptions = options =>
         {
-            options.SigningKey = builder.Configuration["Security:ElsaSigningKey"];
+            options.SigningKey = builder.Configuration["Security:ElsaSigningKey"]!;
 
             options.AccessTokenLifetime = TimeSpan.FromHours(1);
         };
@@ -64,33 +68,21 @@ builder.Services.AddElsa(elsa =>
         identity.UseAdminUserProvider();
     });
 
-    // Configure ASP.NET authentication/authorization.
     elsa.UseDefaultAuthentication(auth => auth.UseAdminApiKey());
 
-    // Expose Elsa API endpoints.
     elsa.UseWorkflowsApi();
 
-    // Setup a SignalR hub for real-time updates from the server.
-    // elsa.UseRealTimeWorkflows();
-
-    // Enable C# workflow expressions
     elsa.UseCSharp();
 
-    // Enable JavaScript workflow expressions
-    // elsa.UseJavaScript(options => options.AllowClrAccess = true);
-
-    // Enable HTTP activities.
     elsa.UseHttp(options => options.ConfigureHttpOptions = httpOptions => httpOptions.BaseUrl = new("https://localhost:5001"));
-
-    // Use timer activities.
-    // elsa.UseScheduling();
-
-    // Register custom activities from the application, if any.
-    // elsa.AddActivitiesFrom<Program>();
-
-    // Register custom workflows from the application, if any.
-    // elsa.AddWorkflowsFrom<Program>();
 });
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = "localhost:6379";
+    options.InstanceName = "SmartLoan_";
+});
+
 
 builder.Services.AddCors(cors => cors.AddDefaultPolicy(policy => policy
     .AllowAnyHeader()

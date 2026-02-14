@@ -7,7 +7,7 @@ services:
     container_name: loan-sql-server
     environment:
       - ACCEPT_EULA=Y            
-      - MSSQL_SA_PASSWORD=Ammar123!
+      - MSSQL_SA_PASSWORD=${SQL_PASSWORD} 
     ports:
       - "1433:1433"
     volumes:
@@ -20,8 +20,8 @@ services:
       - "5672:5672"   
       - "15672:15672" 
     environment:
-      - RABBITMQ_DEFAULT_USER=guest 
-      - RABBITMQ_DEFAULT_PASS=guest 
+      - RABBITMQ_DEFAULT_USER=${RABBIT_USER} 
+      - RABBITMQ_DEFAULT_PASS=${RABBIT_PASS} 
 
   redis:
     image: redis:alpine

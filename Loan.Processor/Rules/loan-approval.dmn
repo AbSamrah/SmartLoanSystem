@@ -1,0 +1,52 @@
+<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd"
+             xmlns:dmndi="http://www.omg.org/spec/DMN/20160719/DMNDI/"
+             xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+             xmlns:di="http://www.omg.org/spec/DMN/20160719/DI/"
+             id="definitions"
+             name="definitions"
+             namespace="http://camunda.org/schema/1.0/dmn">
+
+	<inputData id="InputData_Salary" name="Salary">
+		<variable id="Var_Salary" name="Salary" typeRef="long"/>
+	</inputData>
+
+	<decision id="approve-loan" name="approve-loan">
+
+		<informationRequirement>
+			<requiredInput href="#InputData_Salary"/>
+		</informationRequirement>
+
+		<decisionTable id="DecisionTable_1yri9qa">
+			<input id="Input_1" label="Salary">
+				<inputExpression id="InputExpression_1" typeRef="long">
+					<text>Salary</text>
+				</inputExpression>
+			</input>
+			<output id="Output_1" name="IsApproved" typeRef="boolean" />
+			<rule id="DecisionRule_0acq78n">
+				<inputEntry id="UnaryTests_1pfg7vd">
+					<text>&gt; 1000</text>
+				</inputEntry>
+				<outputEntry id="LiteralExpression_0rhku1m">
+					<text>true</text>
+				</outputEntry>
+			</rule>
+			<rule id="DecisionRule_04k7v99">
+				<inputEntry id="UnaryTests_06jds5r">
+					<text>&lt;= 1000</text>
+				</inputEntry>
+				<outputEntry id="LiteralExpression_1ldm5tj">
+					<text>false</text>
+				</outputEntry>
+			</rule>
+		</decisionTable>
+	</decision>
+
+	<dmndi:DMNDI>
+		<dmndi:DMNDiagram>
+			<dmndi:DMNShape id="Decision_0g92uc0_di" dmnElementRef="approve-loan">
+				<dc:Bounds height="80" width="180" x="160" y="100" />
+			</dmndi:DMNShape>
+		</dmndi:DMNDiagram>
+	</dmndi:DMNDI>
+</definitions>
